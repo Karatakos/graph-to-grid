@@ -10,6 +10,6 @@ jobs:
       - uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
-      - run: dotnet pack --configuration release
-      - run: dotnet nuget push "bin/Release/dungen.*.nupkg" --skip-duplicate --api-key ${{ secrets.NUGET_ORG_API_KEY }} --source https://api.nuget.org/v3/index.json
+      - run: dotnet pack Dungen/Dungen.csproj --configuration release
+      - run: dotnet nuget push "Dungen/bin/Release/dungen.*.nupkg" --skip-duplicate --api-key ${{ secrets.NUGET_ORG_API_KEY }} --source https://api.nuget.org/v3/index.json
 
