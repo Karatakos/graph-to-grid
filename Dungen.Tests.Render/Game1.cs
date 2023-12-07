@@ -1,11 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Extensions.Logging;
 
 using System;
 using System.Collections.Generic;
 
 using Dungen;
+using Microsoft.Extensions.Logging.Console;
 
 namespace Dungen.Tests.Render;
 
@@ -122,10 +124,10 @@ public class Game1 : Game
                     new Vector2F(x, y), 
                     new Vector2F(x, -y),
                     new Vector2F(-x, -y),
-                    new Vector2F(-x, y)}),
+                    new Vector2F(-x, y)})/*,
             doors: new DoorContraint()
                 .AddConstraintLine(new Vector2F(x, y), new Vector2F(x, -y))
-                .AddConstraintLine(new Vector2F(-x, -y), new Vector2F(-x, y)));
+                .AddConstraintLine(new Vector2F(-x, -y), new Vector2F(-x, y))*/);
 
         x = (_doorWidth + (_doorGapMin * 2))/2;
         y = 70/2;
@@ -138,10 +140,10 @@ public class Game1 : Game
                     new Vector2F(x, y), 
                     new Vector2F(x, -y),
                     new Vector2F(-x, -y),
-                    new Vector2F(-x, y)}),
+                    new Vector2F(-x, y)})/*,
             doors: new DoorContraint()
                 .AddConstraintLine(new Vector2F(-x, y), new Vector2F(x, y))
-                .AddConstraintLine(new Vector2F(x, -y), new Vector2F(-x, -y)));
+                .AddConstraintLine(new Vector2F(x, -y), new Vector2F(-x, -y))*/);
 
         RoomDefinition entrance = new RoomDefinition(
             blueprints: new List<RoomBlueprint>() {normalRoomT1},
@@ -213,12 +215,20 @@ public class Game1 : Game
 
     private DungenLayout GenerateDungeon(DungenGraph graph) {
         DungenLayout dungeon = null;
+
+        ILoggerFactory loggerFactory = LoggerFactory.Create(builder => {
+            builder.AddSimpleConsole(options => {
+                options.SingleLine = true;
+            });
+        });
+
         try {
             DungenGeneratorProps props = new DungenGeneratorProps();
             props.DoorWidth = _doorWidth;
             props.DoorToCornerMinGap = _doorGapMin;
             props.Graph = graph;
             props.TargetSolutions = 1;
+            props.LoggerFactory = loggerFactory;
 
             DungenGenerator generator = new DungenGenerator(props);
 

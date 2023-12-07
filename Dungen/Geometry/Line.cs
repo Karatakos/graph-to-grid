@@ -137,9 +137,6 @@ public class Line {
                 //
                 if (ds < Config.Tolerance || de < Config.Tolerance)
                 {
-                    //Console.WriteLine(String.Format("Existing line: {0}", existingLine));
-                    //Console.WriteLine(String.Format("New line 2: {0}", newLine));
-
                     Vector2F posMin1 = Vector2F.MinUnion(existingLine.Start, existingLine.End);
                     Vector2F posMax1 = Vector2F.MaxUnion(existingLine.Start, existingLine.End);
                     Vector2F posMin2 = Vector2F.MinUnion(newLine.Start, newLine.End);
@@ -161,13 +158,9 @@ public class Line {
                     existingLine.Start = pos1;
                     existingLine.End = pos2;
 
-                    //Console.WriteLine(String.Format("New line: {0}", existingLine));
-
                     include = false;
                     break;
                 }
-
-                //Console.WriteLine(String.Format("WTF ds: {0} de: {1}", ds, de));
             }
 
             if (include)

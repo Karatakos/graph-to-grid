@@ -2,6 +2,7 @@
 
 using GraphPlanarityTesting.Graphs.DataStructures;
 using GraphPlanarityTesting.PlanarityTesting.BoyerMyrvold;
+using Microsoft.Extensions.Logging;
 
 public class GraphDecomposition {
     public GraphDecomposition(UndirectedAdjacencyListGraph<Vertex> graph) {
@@ -29,15 +30,16 @@ public static class GraphDecomposer
         // Let's have a look at the embedding for other faces, i.e all edges for each vertex
         //
         for (int i=0; i<facestmp.Faces.Count; i++) {
-            Console.WriteLine(String.Format("Detected face {0}", i+1));
+            SimpleLogger.Logger.LogInformation(String.Format("Detected face {0}", i+1));
             for (int j=0; j<facestmp.Faces[i].Count; j++) {
-                Console.WriteLine(String.Format("{0}: {1}",
+                SimpleLogger.Logger.LogInformation(String.Format("{0}: {1}",
                     facestmp.Faces[i][j],
                     embedding.GetEdgesAroundVertex(facestmp.Faces[i][j]).Aggregate(
                         "", 
                         (a, b) => String.Format("{0}; E({1},{2})", a, b.Source, b.Target))));
             }
-            Console.WriteLine("");
+
+            SimpleLogger.Logger.LogInformation("");
         }
 
         List<List<Vertex>> faces = facestmp.Faces.GetRange(1, facestmp.Faces.Count-1);
@@ -109,12 +111,13 @@ public static class GraphDecomposer
         // Let's have a look at 
         //
         for (int i=0; i<decomp.Chains.Count; i++) {
-            Console.WriteLine(String.Format("Extracted chain {0}", i+1));
-            Console.WriteLine(String.Format("Vertices: {0}",
+            SimpleLogger.Logger.LogInformation(String.Format("Extracted chain {0}", i+1));
+            SimpleLogger.Logger.LogInformation(String.Format("Vertices: {0}",
                 decomp.Chains[i].Vertices.Aggregate(
                     "", 
                     (a, b) => String.Format("{0}; {1}", a, b))));
-            Console.WriteLine("");
+
+            SimpleLogger.Logger.LogInformation("");
         }
 
         return decomp;

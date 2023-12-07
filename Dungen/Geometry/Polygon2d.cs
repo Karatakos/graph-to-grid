@@ -124,8 +124,6 @@ public abstract class Polygon2d {
 
         List<IntPoint> movingShapePoints = new List<IntPoint>();
         foreach (Vector2F v in movingShape.Points) {
-            //Console.WriteLine(String.Format("Clip x: {0} clip y: {1}", 
-            //  MathUtil.FloatToInt64(v.x), MathUtil.FloatToInt64(v.y)));
             movingShapePoints.Add(new IntPoint(Math2D.FloatToInt64(v.x), Math2D.FloatToInt64(v.y)));
         }
         
@@ -138,9 +136,7 @@ public abstract class Polygon2d {
         clip.Execute(ClipType.ctIntersection, solution, PolyFillType.pftNonZero);
 
         float collideArea = 0f;
-        //Console.WriteLine(String.Format("Clip solutions: {0}", solution.Count));
         for (int i=0; i<solution.Count; i++) {
-            //Console.WriteLine(Clipper.Area(solution[i]));
             collideArea += Math.Abs(Math2D.DoubleToFloat(Clipper.Area(solution[i])));
         }
 
