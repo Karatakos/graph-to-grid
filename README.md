@@ -71,7 +71,7 @@ if (generator.TryGenerate())
 
 ### Logging
 
-Provide your ILogger implementation to the generator via ```DungenGeneratorProps``` before initializing. For example:
+Pass the generator an ```ILoggerFactory``` via ```DungenGeneratorProps``` before initializing. For example:
 
 ```
 DungenGeneratorProps props = new DungenGeneratorProps();
@@ -86,8 +86,8 @@ props.LoggerFactory = LoggerFactory.Create(builder => {
 
 Please open an issue and reference it in a Pull Request. 
 
-Ensure there is a corresponding unit test and that the test render it updated and runs (where applicable). Monogame SDK is in use to render a layout.
+Ensure there is a corresponding unit test and that the test render it updated and runs (where applicable). Using Monogame SDK to render a test layout.
 
 ### Package Deployment
 
-A GH workflow will deploy a new NUGET package to GH Packages upon PR merge to main.
+A GH workflow will deploy a new nuget package upon PR merge to main. Publish has been set to ignore if the version matches an existing packge. Version can be updated via ```Dungen.csproj```.
