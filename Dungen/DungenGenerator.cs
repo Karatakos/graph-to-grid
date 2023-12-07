@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 
 using GraphPlanarityTesting.Graphs.DataStructures;
+using Microsoft.Extensions.Logging;
 
 public class DungenGeneratorProps {
     public  DungenGraph Graph { get; set; }
@@ -13,6 +14,8 @@ public class DungenGeneratorProps {
     public float DoorToCornerMinGap { get; set; } = 1f; 
     
     public int TargetSolutions { get; set; } = 1;
+
+    public ILoggerFactory LoggerFactory { get; set; }
 }   
 
 public class DungenGenerator {
@@ -29,6 +32,8 @@ public class DungenGenerator {
     private List<DungenLayout> Dungeons { get; set; }
 
     private DungenGraph Graph { get; set; }
+
+    private ILogger Log { get; set; }
     
     public DungenGenerator(DungenGeneratorProps props) {
         Graph = props.Graph;
@@ -41,6 +46,8 @@ public class DungenGenerator {
 
         _visited = new List<Vertex>();
         _csBuilder = new ConfigSpacesBuilder();
+
+        Log = SimpleLogger.InitializeLogger(props.LoggerFactory);
     }
 
     public void Initialize() {
@@ -81,8 +88,7 @@ public class DungenGenerator {
                 if (layout.Depth+1 < chainIndex) {
                     backtrackCounter++;
 
-                    Console.WriteLine();
-                    Console.WriteLine(String.Format("Backtracking to depth {0}", layout.Depth+1));
+                    Log.LogInformation(String.Format("Backtracking to depth {0}", layout.Depth+1));
                 }
 
                 // Move to the next chain
@@ -122,10 +128,10 @@ public class DungenGenerator {
                             Dungeons.Add(new DungenLayout(new Layout(layoutClone, Graph), Graph));
 
                             if (Solutions.Count == Config.TargetSolutionCount) {
-                                Console.WriteLine(String.Format("Desired number of solutions generated {0}", Solutions.Count));
+                                Log.LogInformation(String.Format("Desired number of solutions generated {0}", Solutions.Count));
                                 
                                 for (int i=0; i<Solutions.Count; i++)
-                                    Console.WriteLine(String.Format("Solution {0} energy {1}", i, Solutions[i].Energy));
+                                    Log.LogInformation(String.Format("Solution {0} energy {1}", i, Solutions[i].Energy));
 
                                 return true;
                             }
@@ -134,7 +140,7 @@ public class DungenGenerator {
                         layouts.Push(newLayout);
 
                         if (layoutCounter++ == Config.MaxPartialLayouts) {
-                            Console.WriteLine(String.Format("Desired number of layouts generated {0}", layoutCounter));
+                            Log.LogInformation(String.Format("Desired number of layouts generated {0}", layoutCounter));
                             break;
                         }
                             
@@ -144,17 +150,17 @@ public class DungenGenerator {
                 layoutCounter = 0;
             }
 
-            Console.WriteLine();
-            Console.WriteLine(String.Format("Chains processed {0}", chainIndex+1));
-            Console.WriteLine(String.Format("Layouts generated {0}", layoutsTotal));
-            Console.WriteLine(String.Format("Solutions generated {0}", Solutions.Count));
-            Console.WriteLine(String.Format("Backtracked {0}", backtrackCounter));
+            Log.LogInformation("");
+            Log.LogInformation(String.Format("Chains processed {0}", chainIndex+1));
+            Log.LogInformation(String.Format("Layouts generated {0}", layoutsTotal));
+            Log.LogInformation(String.Format("Solutions generated {0}", Solutions.Count));
+            Log.LogInformation(String.Format("Backtracked {0}", backtrackCounter));
 
             trialsTotal++;
         }
 
-        Console.WriteLine();
-        Console.WriteLine(String.Format("Resets {0}", trialsTotal));
+        Log.LogInformation("");
+        Log.LogInformation(String.Format("Resets {0}", trialsTotal));
 
         if (Solutions.Count == 0)
             return false;
@@ -252,9 +258,9 @@ public class DungenGenerator {
                 chainVerticesVisited++; 
             }
 
-            Console.WriteLine();
-            Console.WriteLine(String.Format("Chain {0}", bestLayout.Depth+1));
-            Console.WriteLine(String.Format("Best guess layout energy {0}", bestLayout.Energy));
+            Log.LogInformation("");
+            Log.LogInformation(String.Format("Chain {0}", bestLayout.Depth+1));
+            Log.LogInformation(String.Format("Best guess layout energy {0}", bestLayout.Energy));
         }
         
         return RunAnnealingOnLayout(bestLayout, chain);
@@ -270,9 +276,9 @@ public class DungenGenerator {
         float frac = (float)Math.Pow((t0 / t1), 1.0f / (float)(Config.MaxCycles - 1.0f));
         float temp = t1;       
 
-        Console.WriteLine(String.Format("Starting prob of accept {0}", t1));
-        Console.WriteLine(String.Format("Ending prob of accept {0}", t0));
-        Console.WriteLine(String.Format("Fractional increase in temp {0}", frac));
+        Log.LogInformation(String.Format("Starting prob of accept {0}", t1));
+        Log.LogInformation(String.Format("Ending prob of accept {0}", t0));
+        Log.LogInformation(String.Format("Fractional increase in temp {0}", frac));
 
         int acceptedLayouts = 1;
         int totalLayouts = 1;
@@ -363,11 +369,11 @@ public class DungenGenerator {
             temp *= frac;
         }
 
-        Console.WriteLine(String.Format("Temperature at finish {0}", temp));
-        Console.WriteLine(String.Format("Annealing accepted layouts {0} of {1} ", acceptedLayouts, totalLayouts));
-        Console.WriteLine(String.Format("Failed cycles {0}", failures));
-        Console.WriteLine(String.Format("Lowest accepted energy layout {0}", bestEnergy));
-        Console.WriteLine(String.Format("Highest accepted energy layout {0}", worstEnergy));
+        Log.LogInformation(String.Format("Temperature at finish {0}", temp));
+        Log.LogInformation(String.Format("Annealing accepted layouts {0} of {1} ", acceptedLayouts, totalLayouts));
+        Log.LogInformation(String.Format("Failed cycles {0}", failures));
+        Log.LogInformation(String.Format("Lowest accepted energy layout {0}", bestEnergy));
+        Log.LogInformation(String.Format("Highest accepted energy layout {0}", worstEnergy));
     }
 
     private bool TryPerturbRandomRoom(Layout layout, Chain chain, out Layout newLayout) {
@@ -440,8 +446,6 @@ public class DungenGenerator {
     private void InstallDoorsForLayout(Layout layout) {
         HashSet<int> visitedEdges = new HashSet<int>();
 
-        Console.WriteLine();
-
         for (int i=0; i<layout.Rooms.Count; i++) {
             KeyValuePair<Vertex, Room> kvp = layout.Rooms.ElementAt(i);
             Vertex v = kvp.Key;
@@ -466,8 +470,7 @@ public class DungenGenerator {
 
                 visitedEdges.Add(pairKey);
 
-                Console.WriteLine();
-                Console.WriteLine(String.Format(
+                Log.LogInformation(String.Format(
                     "Installing door for pair {0}, room: {1}, neighbour: {2}",
                     pairKey,
                     r.Number,
@@ -477,6 +480,8 @@ public class DungenGenerator {
                 // will return references to new rooms rather than mutating
                 //
                 InstallDoors(ref r, ref rN, v, vN, edge);
+
+                Log.LogInformation("");
 
                 // Replace with references to new rooms
                 //
@@ -501,11 +506,10 @@ public class DungenGenerator {
                 if (Vector2F.Magnitude(overlap.GetDirection()) < 
                     ((Config.DoorWidth - Config.Tolerance) + (Config.DoorToCornerMinGap * 2)))
                     continue;
-                    
-                Console.WriteLine();
-                Console.WriteLine("Overlap: {0}", overlap);
-                Console.WriteLine("Line 1: {0}", l1);
-                Console.WriteLine("Line 2: {0}", l2);
+
+                Log.LogInformation("Overlap: {0}", overlap);
+                Log.LogInformation("Line 1: {0}", l1);
+                Log.LogInformation("Line 2: {0}", l2);
 
                 r1 = InstallDoor(r1, r2, v1, edge, l1, overlap);
                 r2 = InstallDoor(r2, r1, v2, edge, l2, overlap);
@@ -538,10 +542,9 @@ public class DungenGenerator {
 
         Line doorLine = new Line(c1, c2);
 
-        Console.WriteLine();
-        Console.WriteLine("Room: {0}", room.Number);
-        Console.WriteLine("Door line: {0}", doorLine);
-        Console.WriteLine("Wall: {0}", boundaryLine);
+        Log.LogInformation("Room: {0}", room.Number);
+        Log.LogInformation("Door line: {0}", doorLine);
+        Log.LogInformation("Wall: {0}", boundaryLine);
 
         List<Vector2F> newPolygon = 
             MergeLineIntoBoundary(new List<Vector2F>(room.Points), doorLine, boundaryLine);

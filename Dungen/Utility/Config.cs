@@ -1,3 +1,4 @@
+
 namespace Dungen;
 
 public static class Config {
