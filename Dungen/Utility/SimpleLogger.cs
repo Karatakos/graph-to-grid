@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 namespace Dungen;
 
 public static class SimpleLogger {
-    private static string _category = "DungenLib";
+    private static string _category = "Dungen";
     private static ILogger _logger;
 
     public static ILogger Logger {
@@ -17,9 +17,10 @@ public static class SimpleLogger {
     }
 
     public static ILogger InitializeLogger(ILoggerFactory factory) {
-        _logger = factory.CreateLogger(_category);
+        if (factory != null)
+            _logger = factory.CreateLogger(_category);
 
-        return _logger;
+        return Logger;
     }
 
 }
