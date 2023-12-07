@@ -3,7 +3,7 @@
 
 # Dungen
 
-Efficiently generate multiple two dimensional dungeon layouts based on an undirected input graph. Implementation of a novel algorithm defined in a paper by [Chongyang Ma, et al.](http://chongyangma.com/publications/gl/index.html "Game Level Layout from Design Specification"). 
+Generate multiple two dimensional dungeon layouts based on an undirected input graph. Implementation of a novel algorithm defined in a paper by [Chongyang Ma, et al.](http://chongyangma.com/publications/gl/index.html "Game Level Layout from Design Specification"). 
 
 ## The Algorithm
 
@@ -67,6 +67,19 @@ Attempt to generate a dungeon!
 ```
 if (generator.TryGenerate())
     var dungeon = generator.Vend();
+```
+
+### Logging
+
+Provide your ILogger implementation to the generator via ```DungenGeneratorProps``` before initializing. For example:
+
+```
+DungenGeneratorProps props = new DungenGeneratorProps();
+props.LoggerFactory = LoggerFactory.Create(builder => {
+    builder.AddSimpleConsole(options => {
+        options.SingleLine = true;
+    });
+});
 ```
 
 ## Contribute
