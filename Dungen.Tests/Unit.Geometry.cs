@@ -8,28 +8,56 @@ using Dungen;
 [TestFixture]
 public class Layouts
 {
-    private RoomBlueprint _square;
+    private DungenGraph _graph;
+    private RoomBlueprint _smallSquareRoomBlueprint;
+    private RoomBlueprint _squareRoomBlueprint;
+    private RoomDefinition _regularRoomDefinition;
 
     [SetUp]
     public void Setup()
     {
-        float x = 20/2;
-        float y = 20/2;
+        float width = 20/2;
+        float height = 20/2;
 
-        _square = new RoomBlueprint(
+        _squareRoomBlueprint = new RoomBlueprint(
             points: new List<Vector2F>(
                 new Vector2F[] {
-                    new Vector2F(x, y), 
-                    new Vector2F(x, -y),
-                    new Vector2F(-x, -y),
-                    new Vector2F(-x, y)}));
+                    new Vector2F(width, height), 
+                    new Vector2F(width, -height),
+                    new Vector2F(-width, -height),
+                    new Vector2F(-width, height)}));
+
+        width = 10;
+        height = 5;
+        
+        // Rectangular normal room 
+        //
+        _smallSquareRoomBlueprint = new RoomBlueprint(
+            points: new List<Vector2F>(
+                new Vector2F[] {
+                    new Vector2F(width, height), 
+                    new Vector2F(width, -height),
+                    new Vector2F(-width, -height),
+                    new Vector2F(-width, height)}));
+
+        _regularRoomDefinition = new RoomDefinition( 
+            blueprints: new List<RoomBlueprint>() {
+                _smallSquareRoomBlueprint},
+            type: RoomType.Normal);
+
+        _graph = new DungenGraph();
+
+        _graph.AddRoom(0, _regularRoomDefinition);
+        _graph.AddRoom(1, _regularRoomDefinition);
+
+        _graph.AddConnection(0, 1);
     }
 
     [Test]
     public void RoomDistance()
     {
-        Room room1 = new Room(_square, RoomType.Normal);
-        Room room2 = new Room(_square, RoomType.Normal);
+        Room room1 = new Room(_squareRoomBlueprint, RoomType.Normal);
+        Room room2 = new Room(_squareRoomBlueprint, RoomType.Normal);
         room2.Translate(new Vector2F(11, 11));
 
         Assert.That(
@@ -40,8 +68,8 @@ public class Layouts
     [Test]
     public void RoomCollisionArea()
     {
-        Room room1 = new Room(_square, RoomType.Normal);
-        Room room2 = new Room(_square, RoomType.Normal);
+        Room room1 = new Room(_squareRoomBlueprint, RoomType.Normal);
+        Room room2 = new Room(_squareRoomBlueprint, RoomType.Normal);
 
         room2.Translate(new Vector2F(2, 2));
 
@@ -60,13 +88,33 @@ public class Layouts
     [Test]
     public void RoomWallContactArea()
     {
-        Room room1 = new Room(_square, RoomType.Normal);
-        Room room2 = new Room(_square, RoomType.Normal);
+        Room room1 = new Room(_squareRoomBlueprint, RoomType.Normal);
+        Room room2 = new Room(_squareRoomBlueprint, RoomType.Normal);
 
         room2.Translate(new Vector2F(10, 5));
 
         Assert.That(
             Room.ComputeRoomContactArea(room1, room2),
             Is.EqualTo(80F));
+    }
+
+    [Test]
+    public void LayoutHasCorrectDimenions()
+    {
+        var vertices = _graph.Vertices.ToArray();
+
+        Layout layout = new Layout(new Layout(1), _graph);
+
+        Room r1 = new Room(_smallSquareRoomBlueprint, RoomType.Normal, 0);
+        Room r2 = new Room(_smallSquareRoomBlueprint, RoomType.Normal, 1);
+
+        layout.Rooms.Add(vertices[0], r1);
+        layout.Update(vertices[0], r1);
+
+        layout.Rooms.Add(vertices[1], r2);
+        layout.Update(vertices[1], r2);
+
+        Assert.That(layout.Width, Is.EqualTo(40));
+        Assert.That(layout.Height, Is.EqualTo(20));
     }
 }

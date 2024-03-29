@@ -239,9 +239,6 @@ public class DungenGenerator {
 
                     Layout tmpLayout = new Layout(bestLayout, Graph);
                     tmpLayout.Rooms.Add(vertex, roomTmp);
-
-                    // Compute energy for room update
-                    //
                     tmpLayout.Update(vertex, roomTmp);
 
                     if (tmpLayout.Energy.E < e) {
@@ -435,9 +432,6 @@ public class DungenGenerator {
         // Update the layout with the new room
         //
         newLayout.Rooms[vertex] = roomTemplate;
-
-        // Computes energy based on the room update
-        //
         newLayout.Update(vertex, roomTemplate);
 
         return true;
