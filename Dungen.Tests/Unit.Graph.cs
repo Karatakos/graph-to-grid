@@ -8,7 +8,7 @@ using GraphPlanarityTesting.Graphs.DataStructures;
 using GraphPlanarityTesting.PlanarityTesting.BoyerMyrvold;
 
 [TestFixture]
-public class Graph
+public class Graphs
 {
     private UndirectedAdjacencyListGraph<Vertex> _planarGraph;
     private UndirectedAdjacencyListGraph<Vertex> _planarGraphWTF;

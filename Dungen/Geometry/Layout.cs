@@ -8,6 +8,10 @@ public class Layout {
     public Energy Energy { get; set; }
     public int Depth { get; set; }
     public bool Valid { get; private set; }
+    public float Width { get; private set; }
+    public float Height { get; private set; }
+
+
     private float _sigma = 0.0f;
     private Dictionary<int, Energy> _roomPairEnergyCache;
     private Dictionary<int, Energy> _roomEnergyCache;
@@ -90,6 +94,9 @@ public class Layout {
         return Energy;         
     }
 
+    /* Recalculates room energies and layout size. Must be called on room change.
+    *
+    */
     public Energy Update(Vertex updatedVertex, Room updatedRoom) {
         if (Rooms[updatedVertex] != updatedRoom)
             throw new Exception("Room not found in layout collection");
@@ -104,10 +111,21 @@ public class Layout {
         else 
             _roomEnergyCache[updatedRoomKey] = roomE;
 
+        // Initilize dimensions in case of change
+        //
+        Width = 0;
+        Height = 0;
+
         List<Vertex> neighbours = Graph.GetNeighbours(updatedVertex).ToList();
         foreach (KeyValuePair<Vertex, Room> kvp in Rooms) {
             Vertex v = kvp.Key;
             Room r = kvp.Value;
+
+            // Update layout dimensions (client need, not used for algorithm)
+            //
+            AABB2F rBoundingBox = r.GetBoundingBox();
+            Width += rBoundingBox.Max.x - rBoundingBox.Min.x;
+            Height += rBoundingBox.Max.y - rBoundingBox.Min.y;
 
             if (r == updatedRoom)
                 continue;
