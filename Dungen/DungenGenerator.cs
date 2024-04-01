@@ -607,6 +607,9 @@ public class DungenGenerator {
     }
 
     public DungenLayout Vend() {
+        if (Dungeons == null || Dungeons.Count == 0)
+            return null;
+            
         Random rnd = new Random();
         int index = rnd.Next(0, Dungeons.Count);
 

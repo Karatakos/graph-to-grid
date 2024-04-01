@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/Daedalus.Client/bin/Debug/net6.0/Daedalus.Client.dll",
+            "program": "${workspaceFolder}/Dungen.Tests.Render/bin/Debug/net6.0/Dungen.Tests.Render.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/Daedalus.Client",
+            "cwd": "${workspaceFolder}/Dungen.Tests.Render",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false
