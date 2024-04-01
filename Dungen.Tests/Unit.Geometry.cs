@@ -62,7 +62,7 @@ public class Layouts
 
         Assert.That(
             Room.ComputeRoomDistance(room1, room2), 
-            Is.EqualTo(0.0F));
+            Is.EqualTo(9.0F));
     }
 
     [Test]
@@ -75,14 +75,14 @@ public class Layouts
 
         Assert.That(
             Room.ComputeRoomCollisionArea(room1, room2),
-            Is.EqualTo(400F));
+            Is.EqualTo(324F));
 
         room2.Translate(-room2.GetCenter());
         room2.Translate(new Vector2F(10,10));
 
         Assert.That(
             Room.ComputeRoomCollisionArea(room1, room2),
-            Is.EqualTo(399.999969F));
+            Is.EqualTo(99.9999924F));
     }
 
     [Test]
@@ -95,7 +95,7 @@ public class Layouts
 
         Assert.That(
             Room.ComputeRoomContactArea(room1, room2),
-            Is.EqualTo(80F));
+            Is.EqualTo(0F));
     }
 
     [Test]

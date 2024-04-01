@@ -46,7 +46,7 @@ public class Game1 : Game
     }
 
     private DungenGraph InitializeDungeon() {
-        float x = 10/2;
+        /*float x = 10/2;
         float y = 10/2;
 
         RoomBlueprint normal = new RoomBlueprint(
@@ -70,10 +70,9 @@ public class Game1 : Game
         graph.AddConnection(0, 1);
         graph.AddConnection(1, 2);
 
-        return graph;
+        return graph;*/
 
-
-        /*float x = 50/2;
+        float x = 50/2;
         float y = 30/2;
         
         // Rectangular normal room 
@@ -229,7 +228,7 @@ public class Game1 : Game
         graph.AddConnection(4, 8);
         graph.AddConnection(8, 13);
         graph.AddConnection(13, 16);
-        graph.AddConnection(16, 12);*/
+        graph.AddConnection(16, 12);
 
         return graph;
     }
