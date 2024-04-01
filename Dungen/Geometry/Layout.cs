@@ -124,8 +124,8 @@ public class Layout {
             // Update layout dimensions (client need, not used for algorithm)
             //
             AABB2F rBoundingBox = r.GetBoundingBox();
-            Width += rBoundingBox.Max.x - rBoundingBox.Min.x;
-            Height += rBoundingBox.Max.y - rBoundingBox.Min.y;
+            Width += Math.Abs(rBoundingBox.Max.x - rBoundingBox.Min.x);
+            Height += Math.Abs(rBoundingBox.Max.y - rBoundingBox.Min.y);
 
             if (r == updatedRoom)
                 continue;
