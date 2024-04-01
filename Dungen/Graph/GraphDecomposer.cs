@@ -42,10 +42,11 @@ public static class GraphDecomposer
             SimpleLogger.Logger.LogInformation("");
         }
 
-        List<List<Vertex>> faces = facestmp.Faces.GetRange(1, facestmp.Faces.Count-1);
+        List<List<Vertex>> faces = facestmp.Faces.GetRange(0, facestmp.Faces.Count);
+        if (facestmp.Faces.Count > 1)
+            faces.RemoveAt(0);
 
         int depth = 0;
-        
 
         // Keep generating chains until we've accounted for all vertices
         // 
