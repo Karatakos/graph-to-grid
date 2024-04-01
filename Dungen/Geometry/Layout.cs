@@ -33,7 +33,9 @@ public class Layout {
 
         Energy = new Energy(source.Energy.Collision, source.Energy.Connectivity, source.Energy.E); 
         Depth = source.Depth; 
-        Valid = source.Valid;     
+        Valid = source.Valid;    
+        Width = source.Width;
+        Height = source.Height; 
     }
 
     public Layout(int depth) {
