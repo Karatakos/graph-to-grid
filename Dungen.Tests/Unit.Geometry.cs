@@ -27,18 +27,18 @@ public class Layouts
                     new Vector2F(-width, -height),
                     new Vector2F(-width, height)}));
 
-        width = 10;
-        height = 5;
+        width = 10/2;
+        height = 10/2;
         
         // Rectangular normal room 
         //
         _smallSquareRoomBlueprint = new RoomBlueprint(
             points: new List<Vector2F>(
                 new Vector2F[] {
-                    new Vector2F(width, height), 
-                    new Vector2F(width, -height),
-                    new Vector2F(-width, -height),
-                    new Vector2F(-width, height)}));
+                    new Vector2F(-25, -25), 
+                    new Vector2F(-25, -15),
+                    new Vector2F(-15, -15),
+                    new Vector2F(-15, -25)}));
 
         _regularRoomDefinition = new RoomDefinition( 
             blueprints: new List<RoomBlueprint>() {
@@ -114,7 +114,7 @@ public class Layouts
         layout.Rooms.Add(vertices[1], r2);
         layout.Update(vertices[1], r2);
 
-        Assert.That(layout.Width, Is.EqualTo(40));
+        Assert.That(layout.Width, Is.EqualTo(20));
         Assert.That(layout.Height, Is.EqualTo(20));
     }
 }
