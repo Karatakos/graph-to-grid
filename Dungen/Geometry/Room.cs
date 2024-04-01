@@ -18,6 +18,13 @@ public class Room : Polygon2d {
         Doors = copy.Doors;
     }
 
+    public Room(Room copy, List<Vector2F> newShape) : base(newShape) {
+        Number = copy.Number;
+        Type = copy.Type;
+        Blueprint = copy.Blueprint;
+        Doors = new List<Door>();
+    }
+
     public Room(RoomBlueprint blueprint, RoomType type = RoomType.Normal, int number = -1) : 
         this (blueprint, new Vector2F(0, 0), type, number) {}
 

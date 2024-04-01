@@ -29,7 +29,7 @@ public abstract class Polygon2d {
     }
 
     public Polygon2d(List<Vector2F> points) {
-        Points = points;
+        Points = ClonePoints(points);
         
         GenerateHash();
 
@@ -39,9 +39,7 @@ public abstract class Polygon2d {
     }
 
     public Polygon2d(Polygon2d copy) {
-        Points = new List<Vector2F>();
-        foreach (Vector2F p in copy.Points)
-            Points.Add(new Vector2F(p));
+        Points = ClonePoints(copy.Points);
 
         // Maintain riginal shape's hash pre-translation
         //
@@ -50,6 +48,14 @@ public abstract class Polygon2d {
         // We can't generate lines here as it's a virtual function
         //
         _isDirty = true;
+    }
+
+    private List<Vector2F> ClonePoints(List<Vector2F> points) {
+        var clonedPoints = new List<Vector2F>();
+        foreach (Vector2F p in points)
+            clonedPoints.Add(new Vector2F(p));
+
+        return clonedPoints;
     }
 
     public override bool Equals(object obj)

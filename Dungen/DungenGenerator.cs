@@ -540,20 +540,12 @@ public class DungenGenerator {
         Log.LogInformation("Door line: {0}", doorLine);
         Log.LogInformation("Wall: {0}", boundaryLine);
 
-        List<Vector2F> newPolygon = 
-            MergeLineIntoBoundary(new List<Vector2F>(room.Points), doorLine, boundaryLine);
-
-        // Taking the semi-immutable approach of not allowing mutation of a rooms shape
-        // but allowing translation. So due to the shape mutation we opt here to create
-        // a new blueprint and generate a new room 
-        //
-        RoomBlueprint rBP = new RoomBlueprint(
-            points: newPolygon, 
-            doors: room.Blueprint.DoorConstraint);
+        var newPolygon = new List<Vector2F>(
+            MergeLineIntoBoundary(new List<Vector2F>(room.Points), doorLine, boundaryLine));
 
         // Construct a new room
         //
-        Room tmp = new Room(rBP, room.Position, room.Type, room.Number);
+        Room tmp = new Room(room, newPolygon);
 
         // Place existing doors
         //
