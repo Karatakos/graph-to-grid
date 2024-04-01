@@ -19,8 +19,8 @@ public class Game1 : Game
     private Texture2D _tLine;
     private DungenLayout _dungeon;
     private SpriteFont _font;
-    private float _doorWidth = 10f;
-    private float _doorGapMin = 2f;
+    private float _doorWidth = 1f;
+    private float _doorGapMin = 1f;
 
     public Game1()
     {
@@ -46,8 +46,8 @@ public class Game1 : Game
     }
 
     private DungenGraph InitializeDungeon() {
-        float x = 20/2;
-        float y = 20/2;
+        float x = 10/2;
+        float y = 10/2;
 
         RoomBlueprint normal = new RoomBlueprint(
             points: new List<Vector2F>(
