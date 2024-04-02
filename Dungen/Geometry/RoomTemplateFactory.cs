@@ -44,10 +44,11 @@ public class RoomTemplateFactory {
         Random rnd = new Random();
         int index = rnd.Next(0, rooms.Count);
         
-        // Associate the corresponding vertex ID in the graph
+        // Associate the corresponding vertex ID in the graph and reset it's position
         //
         Room newRoom = new Room(rooms[index]); 
         newRoom.Number = roomId;
+        newRoom.Position = newRoom.GetCenter();
 
         return newRoom;
     }

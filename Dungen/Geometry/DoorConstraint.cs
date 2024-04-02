@@ -25,6 +25,18 @@ public class Door {
             ConnectingRoom = connectingRoom;
             DefaultAccess = defaultAccess;
     }
+
+    public Door(Door copy) {
+        Position = copy.Position;
+        ConnectingRoom = copy.ConnectingRoom;
+        DefaultAccess = copy.DefaultAccess;
+    }
+
+    public void Translate(Vector2F v) {
+        Position = ValueTuple.Create<Vector2F, Vector2F>(
+            Position.Item1 + v,
+            Position.Item2 + v);
+    }
 }
 
 public class DoorContraint {

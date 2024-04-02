@@ -547,11 +547,6 @@ public class DungenGenerator {
         //
         Room tmp = new Room(room, newPolygon);
 
-        // Place existing doors
-        //
-        foreach(Door door in room.Doors)
-            tmp.Doors.Add(door);
-
         // Our graph will keep track of special features, in this case it tracks direction
         // even though our underlying graph is undirected.
         //
