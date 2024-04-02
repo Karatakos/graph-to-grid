@@ -37,6 +37,12 @@ public class Door {
             Position.Item1 + v,
             Position.Item2 + v);
     }
+
+    public void Scale(float s) {
+        Position = ValueTuple.Create<Vector2F, Vector2F>(
+            Position.Item1 * s,
+            Position.Item2 * s);
+    }
 }
 
 public class DoorContraint {

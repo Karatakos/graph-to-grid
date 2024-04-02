@@ -91,6 +91,13 @@ public class Room : Polygon2d {
         base.Translate(v);
     }
 
+    public override void Scale(float s) {
+        foreach (Door door in Doors)
+            door.Scale(s);
+
+        base.Scale(s);
+    }
+
     public Door GetDoorForLine(ValueTuple<Vector2F, Vector2F> line) {
         foreach (Door door in Doors)
             if (line == door.Position)
