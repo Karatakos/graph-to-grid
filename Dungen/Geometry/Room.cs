@@ -15,14 +15,18 @@ public class Room : Polygon2d {
         Number = copy.Number;
         Type = copy.Type;
         Blueprint = copy.Blueprint;
-        Doors = copy.Doors;
+        Doors = DeepCopyOfDoors(copy.Doors);
+
+        Position = copy.Position;
     }
 
     public Room(Room copy, List<Vector2F> newShape) : base(newShape) {
         Number = copy.Number;
         Type = copy.Type;
         Blueprint = copy.Blueprint;
-        Doors = new List<Door>();
+        Doors = DeepCopyOfDoors(copy.Doors);
+
+        Position = copy.Position;
     }
 
     public Room(RoomBlueprint blueprint, RoomType type = RoomType.Normal, int number = -1) : 
@@ -34,6 +38,14 @@ public class Room : Polygon2d {
         Blueprint = blueprint;
         Position = pos;
         Doors = new List<Door>();
+    }
+
+    private List<Door> DeepCopyOfDoors(List<Door> doors) {
+        var tmp = new List<Door>();
+        foreach (Door door in doors) 
+            tmp.Add(new Door(door));
+        
+        return tmp;
     }
 
     public static float ComputeRoomDistance(Room room1, Room room2) {
@@ -73,14 +85,15 @@ public class Room : Polygon2d {
     public override void Translate(Vector2F v) {
         Position += v;
 
+        foreach (Door door in Doors)
+            door.Translate(v);
+
         base.Translate(v);
     }
 
     public Door GetDoorForLine(ValueTuple<Vector2F, Vector2F> line) {
         foreach (Door door in Doors)
-            if (line == ValueTuple.Create<Vector2F, Vector2F>(
-                    door.Position.Item1 + Position,
-                    door.Position.Item2 + Position))
+            if (line == door.Position)
                 return door;
 
         return null;

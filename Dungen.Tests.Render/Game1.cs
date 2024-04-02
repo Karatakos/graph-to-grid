@@ -263,7 +263,7 @@ public class Game1 : Game
                     _graphics.GraphicsDevice.Viewport.Bounds.Width / 2,
                     _graphics.GraphicsDevice.Viewport.Bounds.Height / 2);
 
-                // Warnin: Not a clone
+                // Warning: Not a clone
                 //
                 dungeon = generator.Vend();
 
