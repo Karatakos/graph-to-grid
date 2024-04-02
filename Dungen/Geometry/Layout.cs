@@ -118,16 +118,23 @@ public class Layout {
         Width = 0;
         Height = 0;
 
+        float maxX = -100000;
+        float maxY = -100000;
+        float minX = 100000;
+        float minY = 100000;
+
         List<Vertex> neighbours = Graph.GetNeighbours(updatedVertex).ToList();
         foreach (KeyValuePair<Vertex, Room> kvp in Rooms) {
             Vertex v = kvp.Key;
             Room r = kvp.Value;
 
-            // Update layout dimensions (client need, not used for algorithm)
+            // Track layout dimensions (client need, not used for algorithm)
             //
             AABB2F rBoundingBox = r.GetBoundingBox();
-            Width += Math.Abs(rBoundingBox.Max.x - rBoundingBox.Min.x);
-            Height += Math.Abs(rBoundingBox.Max.y - rBoundingBox.Min.y);
+            maxX = Math.Max(maxX, rBoundingBox.Max.x);
+            maxY = Math.Max(maxY, rBoundingBox.Max.y);
+            minX = Math.Min(minX, rBoundingBox.Min.x);
+            minY = Math.Min(minY, rBoundingBox.Min.y);
 
             if (r == updatedRoom)
                 continue;
@@ -181,6 +188,11 @@ public class Layout {
             _roomEnergyCache[updatedRoomKey].Collision += _roomPairEnergyCache[roomPairKey].Collision;
             _roomEnergyCache[updatedRoomKey].Connectivity += _roomPairEnergyCache[roomPairKey].Connectivity;
         }
+
+        // Update our layouts dimension
+        //
+        Width = Math.Abs(maxX - minX);
+        Height = Math.Abs(maxY - minY);
 
         // Finally, compute the layout's energy
         //
