@@ -117,4 +117,22 @@ public class Layouts
         Assert.That(layout.Width, Is.EqualTo(35));
         Assert.That(layout.Height, Is.EqualTo(35));
     }
+
+    [Test]
+    public void ScaleRoom()
+    {
+        Room r1 = new Room(_smallSquareRoomBlueprint, RoomType.Normal, 0);
+
+        var aabbBefore = r1.GetBoundingBox();
+
+        Assert.That(aabbBefore.Max.x - aabbBefore.Min.x, Is.EqualTo(10));
+        Assert.That(aabbBefore.Max.y - aabbBefore.Min.y, Is.EqualTo(10));
+
+        r1.Scale(32);
+
+        var aabbAfter = r1.GetBoundingBox();
+
+        Assert.That(aabbAfter.Max.x - aabbAfter.Min.x, Is.EqualTo(320));
+        Assert.That(aabbAfter.Max.y - aabbAfter.Min.y, Is.EqualTo(320));
+    }
 }

@@ -104,6 +104,13 @@ public abstract class Polygon2d {
         _isDirty = true;
     }
 
+    public virtual void Scale(float s) {
+        for (int i=0; i<Points.Count; i++) 
+            Points[i] = Points[i] * s;     // TODO: Overload *=   
+
+        _isDirty = true;
+    }
+
     protected abstract void GenerateBoundary();
 
     private void GenerateHash() {
