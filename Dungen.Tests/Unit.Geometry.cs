@@ -106,7 +106,7 @@ public class Layouts
         Layout layout = new Layout(new Layout(1), _graph);
 
         Room r1 = new Room(_smallSquareRoomBlueprint, RoomType.Normal, 0);
-        Room r2 = new Room(_smallSquareRoomBlueprint, RoomType.Normal, 1);
+        Room r2 = new Room(_squareRoomBlueprint, RoomType.Normal, 1);
 
         layout.Rooms.Add(vertices[0], r1);
         layout.Update(vertices[0], r1);
@@ -114,7 +114,7 @@ public class Layouts
         layout.Rooms.Add(vertices[1], r2);
         layout.Update(vertices[1], r2);
 
-        Assert.That(layout.Width, Is.EqualTo(20));
-        Assert.That(layout.Height, Is.EqualTo(20));
+        Assert.That(layout.Width, Is.EqualTo(35));
+        Assert.That(layout.Height, Is.EqualTo(35));
     }
 }
