@@ -38,6 +38,8 @@ public class Layout {
         Valid = source.Valid;    
         Width = source.Width;
         Height = source.Height; 
+        Center = source.Center;
+        BoundingBox = source.BoundingBox;
     }
 
     public Layout(int depth) {
