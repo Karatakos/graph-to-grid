@@ -10,6 +10,7 @@ public class Layout {
     public bool Valid { get; private set; }
     public float Width { get; private set; }
     public float Height { get; private set; }
+    public AABB2F BoundingBox { get; private set; }
 
 
     private float _sigma = 0.0f;
@@ -193,6 +194,7 @@ public class Layout {
         //
         Width = Math.Abs(maxX - minX);
         Height = Math.Abs(maxY - minY);
+        BoundingBox = new AABB2F(new Vector2F(minX, minY), new Vector2F(maxX, maxY)); 
 
         // Finally, compute the layout's energy
         //
