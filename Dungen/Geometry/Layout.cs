@@ -195,7 +195,7 @@ public class Layout {
         //
         Width = Math.Abs(maxX - minX);
         Height = Math.Abs(maxY - minY);
-        Center = new Vector2F(Width/2, Height/2);
+        Center = new Vector2F((maxX + minX) / 2, (maxY + minY) / 2);
         BoundingBox = new AABB2F(new Vector2F(minX, minY), new Vector2F(maxX, maxY)); 
 
         // Finally, compute the layout's energy
