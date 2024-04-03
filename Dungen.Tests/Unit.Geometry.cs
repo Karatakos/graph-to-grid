@@ -121,6 +121,8 @@ public class Layouts
         Assert.That(layout.BoundingBox.Min.y, Is.EqualTo(-25));
         Assert.That(layout.BoundingBox.Max.x, Is.EqualTo(10));
         Assert.That(layout.BoundingBox.Max.y, Is.EqualTo(10));
+
+        Assert.That(layout.Center, Is.EqualTo(new Vector2F((float)-7.5, (float)-7.5)));
     }
 
     [Test]
