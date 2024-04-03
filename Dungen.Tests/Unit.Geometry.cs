@@ -116,6 +116,11 @@ public class Layouts
 
         Assert.That(layout.Width, Is.EqualTo(35));
         Assert.That(layout.Height, Is.EqualTo(35));
+        
+        Assert.That(layout.BoundingBox.Min.x, Is.EqualTo(-25));
+        Assert.That(layout.BoundingBox.Min.y, Is.EqualTo(-25));
+        Assert.That(layout.BoundingBox.Max.x, Is.EqualTo(10));
+        Assert.That(layout.BoundingBox.Max.y, Is.EqualTo(10));
     }
 
     [Test]
