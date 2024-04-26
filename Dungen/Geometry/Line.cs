@@ -62,7 +62,15 @@ public class Line {
 
     public override string ToString()
     {
-        return String.Format("P: ({0}) Q: ({1})", Start, End);
+        return String.Format("Start: ({0}) End: ({1})", Start, End);
+    }
+
+    public static bool operator== (Line l1, Line l2) {
+        return l1.Start == l2.Start && l1.End == l2.End;
+    }
+
+    public static bool operator!= (Line l1, Line l2) {
+        return l1.Start != l2.Start || l1.End != l2.End;
     }
 
     public static bool TryGetOverlappingLine(Line l1, Line l2, out Line contact) {

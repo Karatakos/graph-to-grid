@@ -15,18 +15,19 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private Texture2D _texture;
     private Texture2D _tLine;
-    private DungenLayout _dungeon;
+    private Layout _dungeon;
     private SpriteFont _font;
     private float _doorWidth = 1f;
     private float _doorGapMin = 1f;
 
     public Game1()
     {
-        _graphics = new GraphicsDeviceManager(this);
-        _graphics.PreferredBackBufferWidth = 1280;
-        _graphics.PreferredBackBufferHeight = 720;
+        _graphics = new GraphicsDeviceManager(this) {
+            PreferredBackBufferWidth = 1280,
+            PreferredBackBufferHeight = 720
+        };
+        
         _graphics.ApplyChanges();
 
         Content.RootDirectory = "Content";
@@ -233,8 +234,8 @@ public class Game1 : Game
         return graph;
     }
 
-    private DungenLayout GenerateDungeon(DungenGraph graph) {
-        DungenLayout dungeon = null;
+    private Layout GenerateDungeon(DungenGraph graph) {
+        Layout layout = null;
 
         ILoggerFactory loggerFactory = LoggerFactory.Create(builder => {
             builder.AddSimpleConsole(options => {
@@ -263,13 +264,13 @@ public class Game1 : Game
                     _graphics.GraphicsDevice.Viewport.Bounds.Width / 2,
                     _graphics.GraphicsDevice.Viewport.Bounds.Height / 2);
 
-                // Warning: Not a clone
-                //
-                dungeon = generator.Vend();
+                layout = generator.Vend();
+
+                layout.SnapToGrid();
 
                 // Transform to scene center
                 //
-                foreach (Room room in dungeon.Rooms) 
+                foreach (Room room in layout.Rooms.Values) 
                     room.Translate(sceneCenter);
             }
             else {
@@ -280,7 +281,7 @@ public class Game1 : Game
             Console.WriteLine(e); 
         }
 
-        return dungeon;
+        return layout;
     }
 
     protected override void LoadContent()
@@ -311,7 +312,7 @@ public class Game1 : Game
 
         _spriteBatch.Begin();
 
-        if (_dungeon != null && _dungeon.Rooms.Length > 0) 
+        if (_dungeon != null && _dungeon.Rooms.Values.Count > 0) 
             DrawDungeon(_dungeon, Color.Black);
         else 
             DrawString("Failed.", screenCenter, 1.5f);
@@ -321,8 +322,8 @@ public class Game1 : Game
         base.Draw(gameTime);
     }
 
-    void DrawDungeon(DungenLayout dungeon, Color color, int width = 1) {
-        foreach (Room room in dungeon.Rooms) {
+    void DrawDungeon(Layout dungeon, Color color, int width = 1) {
+        foreach (Room room in dungeon.Rooms.Values) {
             DrawRoom(room, color, width);
         }
     }
@@ -355,7 +356,7 @@ public class Game1 : Game
 
             Color c = color;
             if (line.IsDoor) {
-                Door door = room.GetDoorForLine(ValueTuple.Create<Vector2F, Vector2F>(line.Start, line.End));
+                Door door = room.GetDoorForLine(line);
 
                 if (door.DefaultAccess == DefaultDoorAccess.Inaccessible) {
                     Vector2F lineCenter = (line.Start + line.End) / 2;
