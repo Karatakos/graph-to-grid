@@ -11,37 +11,37 @@ public enum DefaultDoorAccess {
 }
 
 public class Door {
-    public Room ConnectingRoom { get; private set; }
+    public int ConnectingRoomNumber { get; private set; }
 
     public DefaultDoorAccess DefaultAccess { get; private set; }
 
-    public ValueTuple<Vector2F, Vector2F> Position { get; private set; }
+    public Line Marker { get; private set; }
 
     public Door(
-        ValueTuple<Vector2F, Vector2F> position, 
-        Room connectingRoom,
+        Line marker, 
+        int connectingRoom,
         DefaultDoorAccess defaultAccess = DefaultDoorAccess.Accessible) {
-            Position = position;
-            ConnectingRoom = connectingRoom;
+            Marker = marker;
+            ConnectingRoomNumber = connectingRoom;
             DefaultAccess = defaultAccess;
     }
 
     public Door(Door copy) {
-        Position = copy.Position;
-        ConnectingRoom = copy.ConnectingRoom;
+        Marker = copy.Marker;
+        ConnectingRoomNumber = copy.ConnectingRoomNumber;
         DefaultAccess = copy.DefaultAccess;
     }
 
     public void Translate(Vector2F v) {
-        Position = ValueTuple.Create<Vector2F, Vector2F>(
-            Position.Item1 + v,
-            Position.Item2 + v);
+        Marker = new Line(
+            Marker.Start + v,
+            Marker.End + v);
     }
 
     public void Scale(float s) {
-        Position = ValueTuple.Create<Vector2F, Vector2F>(
-            Position.Item1 * s,
-            Position.Item2 * s);
+        Marker = new Line(
+            Marker.Start * s,
+            Marker.End * s);
     }
 }
 

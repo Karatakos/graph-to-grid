@@ -29,20 +29,18 @@ public class DungenGenerator {
 
     private List<Layout> Solutions { get; set; }
 
-    private List<DungenLayout> Dungeons { get; set; }
-
     private DungenGraph Graph { get; set; }
 
     private ILogger Log { get; set; }
     
     public DungenGenerator(DungenGeneratorProps props) {
         Graph = props.Graph;
+        
         Config.DoorWidth = props.DoorWidth;
         Config.DoorToCornerMinGap = props.DoorToCornerMinGap;
         Config.TargetSolutionCount = props.TargetSolutions;
 
         Solutions = new List<Layout>();
-        Dungeons = new List<DungenLayout>();
 
         _visited = new List<Vertex>();
         _csBuilder = new ConfigSpacesBuilder();
@@ -122,10 +120,6 @@ public class DungenGenerator {
                             InstallDoorsForLayout(layoutClone);
 
                             Solutions.Add(layoutClone);
-
-                            // Store a copy for the client (via a simplified wrapper)
-                            //
-                            Dungeons.Add(new DungenLayout(new Layout(layoutClone, Graph), Graph));
 
                             if (Solutions.Count == Config.TargetSolutionCount) {
                                 Log.LogInformation(String.Format("Desired number of solutions generated {0}", Solutions.Count));
@@ -563,8 +557,8 @@ public class DungenGenerator {
         //
         tmp.Doors.Add(
             new Door(
-                ValueTuple.Create<Vector2F, Vector2F>(doorLine.Start, doorLine.End),
-                connectingRoom,
+                new Line(doorLine.Start, doorLine.End),
+                connectingRoom.Number,
                 defaultDoorAccess));
 
        return tmp;
@@ -593,13 +587,16 @@ public class DungenGenerator {
         return newPoints;
     }
 
-    public DungenLayout Vend() {
-        if (Dungeons == null || Dungeons.Count == 0)
+    /* Vends a random layout (clone) from the Solutions collection.
+    *  
+    */
+    public Layout Vend() {
+        if (Solutions == null || Solutions.Count == 0)
             return null;
             
         Random rnd = new Random();
-        int index = rnd.Next(0, Dungeons.Count);
+        int index = rnd.Next(0, Solutions.Count);
 
-        return Dungeons[index];
+        return new Layout(Solutions[index], Graph);
     }
 }

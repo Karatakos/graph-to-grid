@@ -209,6 +209,13 @@ public class Layout {
         return Energy;
     }
 
+    public void SnapToGrid() {
+        foreach (Room room in Rooms.Values)
+            room.SnapToGrid();
+
+        Update();
+    }
+
     private float ComputeEnergy(float collisionArea, float connectivity) {
         float e = 1f;
 
@@ -245,7 +252,7 @@ public class Layout {
         // Replaces less efficient (Math.Pow(2, updatedVertex.Id) * Math.Pow(3, v.Id));
         //
         return (((min + max) * (min + max + 1)) / 2) + max;
-    }
+    } 
 }
 
 public class Energy {

@@ -92,41 +92,67 @@ public class Room : Polygon2d {
     }
 
     public override void Scale(float s) {
+        Position *= s;
+
         foreach (Door door in Doors)
             door.Scale(s);
 
         base.Scale(s);
     }
 
-    public Door GetDoorForLine(ValueTuple<Vector2F, Vector2F> line) {
+    public Door GetDoorForLine(Line line) {
         foreach (Door door in Doors)
-            if (line == door.Position)
+            if (line == door.Marker)
                 return door;
 
         return null;
     }
 
+    public void SnapToGrid() {
+        for (int i=0; i<Doors.Count; i++) {
+            var start = new Vector2F(
+                (int)Math.Round(Doors[i].Marker.Start.x, MidpointRounding.AwayFromZero), 
+                (int)Math.Round(Doors[i].Marker.Start.y, MidpointRounding.AwayFromZero));
+
+            var end = new Vector2F(
+                (int)Math.Round(Doors[i].Marker.End.x, MidpointRounding.AwayFromZero), 
+                (int)Math.Round(Doors[i].Marker.End.y, MidpointRounding.AwayFromZero));
+
+            Doors[i] = new Door(new Line(start, end), Doors[i].ConnectingRoomNumber, Doors[i].DefaultAccess);
+        }
+
+        for (int i=0; i<Points.Count; i++) {
+            var newVec = new Vector2F(
+                (int)Math.Round(Points[i].x, MidpointRounding.AwayFromZero), 
+                (int)Math.Round(Points[i].y, MidpointRounding.AwayFromZero));
+
+            Points[i] = newVec;
+        }
+
+        Position = GetCenter();
+    }
+
     protected override void GenerateBoundary() {
         List<Line> tmp = new List<Line>(); 
         for (int i=1; i< Points.Count; i++)
-            tmp.Add(CreateNewBoundaryLine(ValueTuple.Create(Points[i-1], Points[i])));
+            tmp.Add(CreateNewBoundaryLine(new Line(Points[i-1], Points[i])));
 
-        tmp.Add(CreateNewBoundaryLine(ValueTuple.Create(Points[Points.Count-1], Points[0])));
+        tmp.Add(CreateNewBoundaryLine(new Line(Points[Points.Count-1], Points[0])));
 
         Boundary = tmp;
     }
 
-    private Line CreateNewBoundaryLine(ValueTuple<Vector2F, Vector2F> line) {
+    private Line CreateNewBoundaryLine(Line line) {
         Line newLine;
         if (BoundaryLineIsDoor(line))
-            newLine = new BoundaryLine(line.Item1, line.Item2, false, true);
+            newLine = new BoundaryLine(line.Start, line.End, false, true);
         else
-            newLine = new BoundaryLine(line.Item1, line.Item2, BoundaryLineCanContainDoors(line));
+            newLine = new BoundaryLine(line.Start, line.End, BoundaryLineCanContainDoors(line));
 
         return newLine;
     }
 
-    private bool BoundaryLineIsDoor(ValueTuple<Vector2F, Vector2F> line) {
+    private bool BoundaryLineIsDoor(Line line) {
         // TODO: Optimize! Just store Door reference in Boundary Line, better stil;
         //       implement a new line type for a door. Clients can use this type 
         //       to get more information on a door when drawing
@@ -134,15 +160,15 @@ public class Room : Polygon2d {
         return (GetDoorForLine(line) != null);
     }
 
-    private bool BoundaryLineCanContainDoors(ValueTuple<Vector2F, Vector2F> line) {
+    private bool BoundaryLineCanContainDoors(Line line) {
         return LineSatisfiesDoorConstraintType(line, DoorConstraintType.Placeholder, true);
     }
 
-    private bool LineSatisfiesDoorConstraintType(ValueTuple<Vector2F, Vector2F> line, DoorConstraintType type, bool defaultValue) {
+    private bool LineSatisfiesDoorConstraintType(Line line, DoorConstraintType type, bool defaultValue) {
         if (Blueprint.DoorConstraint.HasRestrictedDoor && 
             Blueprint.DoorConstraint.Type == type) {     
             for (int i=0; i<Blueprint.DoorConstraint.AllowedPositions.Count; i++) {
-                if (line == ValueTuple.Create<Vector2F, Vector2F>(
+                if (line == new Line(
                     Blueprint.DoorConstraint.AllowedPositions[i].Item1 + Position,
                     Blueprint.DoorConstraint.AllowedPositions[i].Item2 + Position)) {
                     return true;
