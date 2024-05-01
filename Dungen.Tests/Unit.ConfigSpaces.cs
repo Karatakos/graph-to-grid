@@ -29,8 +29,8 @@ public class ConfigSpaces
     [Test]
     public void SpaceGeneratedFromShapes()
     {
-        Room fixedRoom = new Room(_hexL, RoomType.Normal);
-        Room movingRoom = new Room(_hexL, RoomType.Normal);
+        Room fixedRoom = new Room(_hexL);
+        Room movingRoom = new Room(_hexL);
 
         ConfigSpacesBuilder csBuilder = new ConfigSpacesBuilder();
 
@@ -44,14 +44,14 @@ public class ConfigSpaces
     {
         ConfigSpacesBuilder csBuilder = new ConfigSpacesBuilder();
 
-        Room fixedRoom = new Room(_hexL, RoomType.Normal);
-        Room movingRoom = new Room(_hexL, RoomType.Normal);
+        Room fixedRoom = new Room(_hexL);
+        Room movingRoom = new Room(_hexL);
 
         // Test too simplified as both shapes overlap so will intersect on every line
         // 
         // Note: Line's also intersect at the corners so we get 16 not the expected 8!
         //
-        Room fixedRoom2 = new Room(_hexL, RoomType.Normal);
+        Room fixedRoom2 = new Room(_hexL);
 
         csBuilder.TryFromRoom(fixedRoom, movingRoom, out ConfigSpace cspace1);
         csBuilder.TryFromRoom(fixedRoom2, movingRoom, out ConfigSpace cspace2);

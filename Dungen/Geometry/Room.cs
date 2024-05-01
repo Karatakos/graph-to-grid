@@ -2,18 +2,12 @@ namespace Dungen;
 
 public class Room : Polygon2d {
     public RoomBlueprint Blueprint;
-
-    public RoomType Type { get; set; }
-
     public int Number { get; set; } = -1;
-
     public Vector2F Position { get; set; } = new Vector2F(0, 0);
-
     public List<Door> Doors { get; set; }
 
     public Room(Room copy) : base(copy) {
         Number = copy.Number;
-        Type = copy.Type;
         Blueprint = copy.Blueprint;
         Doors = DeepCopyOfDoors(copy.Doors);
 
@@ -22,19 +16,17 @@ public class Room : Polygon2d {
 
     public Room(Room copy, List<Vector2F> newShape) : base(newShape) {
         Number = copy.Number;
-        Type = copy.Type;
         Blueprint = copy.Blueprint;
         Doors = DeepCopyOfDoors(copy.Doors);
 
         Position = copy.Position;
     }
 
-    public Room(RoomBlueprint blueprint, RoomType type = RoomType.Normal, int number = -1) : 
-        this (blueprint, new Vector2F(0, 0), type, number) {}
+    public Room(RoomBlueprint blueprint, int number = -1) : 
+        this (blueprint, new Vector2F(0, 0), number) {}
 
-    public Room(RoomBlueprint blueprint, Vector2F pos, RoomType type = RoomType.Normal, int id = -1) : base(blueprint.Points) {
+    public Room(RoomBlueprint blueprint, Vector2F pos, int id = -1) : base(blueprint.Points) {
         Number = id;
-        Type = type;
         Blueprint = blueprint;
         Position = pos;
         Doors = new List<Door>();

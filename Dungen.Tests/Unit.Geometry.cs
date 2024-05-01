@@ -56,8 +56,8 @@ public class Layouts
     [Test]
     public void RoomDistance()
     {
-        Room room1 = new Room(_squareRoomBlueprint, RoomType.Normal);
-        Room room2 = new Room(_squareRoomBlueprint, RoomType.Normal);
+        Room room1 = new Room(_squareRoomBlueprint);
+        Room room2 = new Room(_squareRoomBlueprint);
         room2.Translate(new Vector2F(11, 11));
 
         Assert.That(
@@ -68,8 +68,8 @@ public class Layouts
     [Test]
     public void RoomCollisionArea()
     {
-        Room room1 = new Room(_squareRoomBlueprint, RoomType.Normal);
-        Room room2 = new Room(_squareRoomBlueprint, RoomType.Normal);
+        Room room1 = new Room(_squareRoomBlueprint);
+        Room room2 = new Room(_squareRoomBlueprint);
 
         room2.Translate(new Vector2F(2, 2));
 
@@ -88,8 +88,8 @@ public class Layouts
     [Test]
     public void RoomWallContactArea()
     {
-        Room room1 = new Room(_squareRoomBlueprint, RoomType.Normal);
-        Room room2 = new Room(_squareRoomBlueprint, RoomType.Normal);
+        Room room1 = new Room(_squareRoomBlueprint);
+        Room room2 = new Room(_squareRoomBlueprint);
 
         room2.Translate(new Vector2F(10, 5));
 
@@ -105,8 +105,8 @@ public class Layouts
 
         Layout layout = new Layout(new Layout(1), _graph);
 
-        Room r1 = new Room(_smallSquareRoomBlueprint, RoomType.Normal, 0);
-        Room r2 = new Room(_squareRoomBlueprint, RoomType.Normal, 1);
+        Room r1 = new Room(_smallSquareRoomBlueprint, 0);
+        Room r2 = new Room(_squareRoomBlueprint, 1);
 
         layout.Rooms.Add(vertices[0], r1);
         layout.Update(vertices[0], r1);
@@ -128,7 +128,7 @@ public class Layouts
     [Test]
     public void ScaleRoom()
     {
-        Room r1 = new Room(_smallSquareRoomBlueprint, RoomType.Normal, 0);
+        Room r1 = new Room(_smallSquareRoomBlueprint, 0);
 
         var aabbBefore = r1.GetBoundingBox();
 

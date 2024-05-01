@@ -47,32 +47,6 @@ public class Game1 : Game
     }
 
     private DungenGraph InitializeDungeon() {
-        /*float x = 10/2;
-        float y = 10/2;
-
-        RoomBlueprint normal = new RoomBlueprint(
-            points: new List<Vector2F>(
-                new Vector2F[] {
-                    new Vector2F(x, y), 
-                    new Vector2F(x, -y),
-                    new Vector2F(-x, -y),
-                    new Vector2F(-x, y)}));
-
-        RoomDefinition normalDefinition = new RoomDefinition( 
-            blueprints: new List<RoomBlueprint>() { normal },
-            type: RoomType.Normal);
-
-        DungenGraph graph = new DungenGraph();
-
-        graph.AddRoom(0, normalDefinition);
-        graph.AddRoom(1, normalDefinition);
-        graph.AddRoom(2, normalDefinition);
-
-        graph.AddConnection(0, 1);
-        graph.AddConnection(1, 2);
-
-        return graph;*/
-
         float x = 50/2;
         float y = 30/2;
         
@@ -346,7 +320,7 @@ public class Game1 : Game
     void DrawRoom(Room room, Color color, int width = 1) {
         Vector2F pTmp = room.GetCenter();
         DrawString(
-            String.Format("{0} {1}", room.Number.ToString(), room.Type.ToString().Substring(0, 2)),
+            String.Format("{0}", room.Number.ToString()),
             new Vector2(pTmp.x, pTmp.y),
             0.8f);
 

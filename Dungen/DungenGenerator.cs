@@ -55,7 +55,7 @@ public class DungenGenerator {
 
         // Cache config spaces for all room template combinations
         //
-        _csBuilder.Precompute(RoomTemplateFactory.GetAllTemplates());
+        _csBuilder.Precompute(RoomTemplateFactory.VendRoomTemplates(Graph));
 
          _initilized = true;
     }
@@ -184,9 +184,9 @@ public class DungenGenerator {
 
                 bestLayout.Rooms.Add(
                     chain.Vertices[0], 
-                    RoomTemplateFactory.VendRandomTemplate(
-                        chain.Vertices[0].Id, 
-                        chain.Vertices[0].Definition.Type));
+                    RoomTemplateFactory.VendRoom(
+                        chain.Vertices[0].Definition, 
+                        chain.Vertices[0].Id));
 
                 chainVerticesVisited++;
             }
@@ -217,7 +217,7 @@ public class DungenGenerator {
 
                 // Grab config space making sure to shuffle neighbours for additional randomness 
                 //
-                Room room = RoomTemplateFactory.VendRandomTemplate(vertex.Id, vertex.Definition.Type);
+                Room room = RoomTemplateFactory.VendRoom(vertex.Definition, vertex.Id);
                 if (!_csBuilder.TryFromRooms(neighbours.Shuffle(), room, out ConfigSpace cspace))
                     continue;
 
@@ -408,9 +408,9 @@ public class DungenGenerator {
         bool perturbShape = x >= 0.7f;
 
         if (perturbShape)
-            roomTemplate = RoomTemplateFactory.VendRandomTemplate(
-                vertex.Id, 
-                vertex.Definition.Type, 
+            roomTemplate = RoomTemplateFactory.VendRoom(
+                vertex.Definition, 
+                vertex.Id,
                 roomTemplate);
 
         if (!_csBuilder.TryFromRooms(
