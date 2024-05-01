@@ -15,8 +15,6 @@ public class DungenGraph : UndirectedAdjacencyListGraph<Vertex> {
     }
     
     public void AddRoom(int roomId, RoomDefinition definition) {
-        RoomTemplateFactory.Register(definition);
-
         this.AddVertex(new Vertex(roomId, definition));
     }
 
