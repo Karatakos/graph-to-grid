@@ -41,17 +41,17 @@ graph.Connection(0, 1);
 graph.Connection(1, 2);
 ```
 
-Optionaly override default configuration 
+Optionaly override default configuration and provide logger 
 ```
-GraphToGridConfiguration config = new GraphToGridConfiguration();
+G2GConfig.DoorWidth = 10;
+G2GConfig.DoorToCornerMinGap = 5;
+G2GConfig.TargetSolutions = 1;
 
-config.DoorWidth = 10;
-config.DoorToCornerMinGap = 5;
-config.TargetSolutions = 1;
-config.Logger = LoggerFactory.Create(builder => {
-    builder.AddSimpleConsole(options => {
-        options.SingleLine = true;
-    }).CreateLogger("GraphToGrid");
+G2GDebug.Logger = LoggerFactory.Create(builder => {
+    builder
+        .AddSimpleConsole(options => options.SingleLine = true)
+        .SetMinimumLevel(LogLevel.Debug);
+}).CreateLogger("GraphToGrid");
 ```
 
 Initialize a layout generator.

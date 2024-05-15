@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/Dungen.Tests.Render/bin/Debug/net6.0/Dungen.Tests.Render.dll",
+            "program": "${workspaceFolder}/GraphToGrid.Demo/bin/Debug/net8.0/GraphToGrid.Demo.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/Dungen.Tests.Render",
+            "cwd": "${workspaceFolder}/GraphToGrid.Demo",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false
