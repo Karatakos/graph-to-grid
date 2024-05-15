@@ -1,93 +1,78 @@
 
-![Nuget](https://img.shields.io/nuget/v/Dungen)
+![Nuget](https://img.shields.io/nuget/v/GraphToGrid)
 
-# Dungen
+# Graph To Grid
 
-Generate multiple two dimensional dungeon layouts based on an undirected input graph. Implementation of a novel algorithm defined in a paper by [Chongyang Ma, et al.](http://chongyangma.com/publications/gl/index.html "Game Level Layout from Design Specification"). 
+Given a _single_ undirected planar graph as well as an array of shapes, procedurally generates multiple unique layouts each mapped onto a 2d cartesian grid. These layouts can be used directly in your graphics framework or game engine of choice to represent maps in a 2d game, be it a Tiled or regular map. Implementation of an algorithm defined in a paper _'Game Level Layout from Design Specification'_ by [Chongyang Ma, et al.](http://chongyangma.com/publications/gl/index.html "Game Level Layout from Design Specification"). 
 
-## The Algorithm
-
-The core algorithm takes advantage of a concept borrowed from robotics called Configuration Spaces, as well as a concept called Simulated Anealing.
-
-At a high level:
- 
-1. Precomputes a set of lines for each of our shapes 
-(rooms) relative to each other shape (room) defined in our graph. The lines dicate where a shape can move relative to another shape fixed in place in a way that the two shapes touch but do not intercept. 
-2. Extracts faces from the undirected input graph so each face can be solved for individually. These are known as chains.
-3. For each node in a given chain, based on the node's room blueprint, randomly picks a shape and places it in 2D cartesian space based on the previous node in the chain by using the two shapes' Configuration Space. We do this via DFS for all chains to naivly put together a baseline layout.
-4. Simulated Annealing is leveraged to generate hundreds of new layouts from our baseline layout, each layout is validated against our set constraints (touch but do not intercept). Valid layouts are made available to the calling code immediately.
+![Example Graph Output](https://github.com/Karatakos/graph-to-map/assets/6386987/27497c64-c991-4d65-bebf-5db450822661)
 
 ## Usage
 
-```dotnet add package Dungen```
+```dotnet add package GraphToGrid```
 
-Create one or more blueprints that define a rooms shape.
+Create blueprints representing shapes
 ```
-RoomBlueprint normalRoomBlueprint = new RoomBlueprint(
+RoomBlueprint squareBlueprint = new RoomBlueprint(
     points: new List<Vector2F>(
         new Vector2F[] {
-            new Vector2F(x, y), 
-            new Vector2F(x, -y),
-            new Vector2F(-x, -y),
-            new Vector2F(-x, y)}));
+            new Vector2F(0, 0), 
+            new Vector2F(0, 10),
+            new Vector2F(10, 10),
+            new Vector2F(10, 0)}));
 ```
 
-Create a room definition. A room definition can contain one or many blueprints.
+Create definitions that can be assigned to any given graph node to control available blueprints
 ```
-RoomDefinition normalRoom = new RoomDefinition( 
+RoomDefinition regularRoom = new RoomDefinition( 
     blueprints: new List<RoomBlueprint>() {
-        normalRoomBlueprint},
-    type: RoomType.Normal);
+        squareBlueprint});
 ```
 
-Create a new (undirected) input graph representing the layout.
+Create a graph assigning definitions to nodes and connections between nodes
 ```
-DungenGraph graph = new DungenGraph();
-graph.AddRoom(0, normal);
-graph.AddRoom(1, normal);
-graph.AddRoom(2, normal);
+LayoutGraph graph = new LayoutGraph();
+
+graph.AddRoom(0, regularRoom);
+graph.AddRoom(1, regularRoom);
+graph.AddRoom(2, regularRoom);
+
+graph.Connection(0, 1);
+graph.Connection(1, 2);
 ```
 
-Define input options.
+Optionaly override default configuration 
 ```
-DungenGeneratorProps props = new DungenGeneratorProps();
-props.DoorWidth = 10;
-props.DoorToCornerMinGap = 5;
-props.Graph = graph;
-props.TargetSolutions = 1;
+GraphToGridConfiguration config = new GraphToGridConfiguration();
+
+config.DoorWidth = 10;
+config.DoorToCornerMinGap = 5;
+config.TargetSolutions = 1;
+config.Logger = LoggerFactory.Create(builder => {
+    builder.AddSimpleConsole(options => {
+        options.SingleLine = true;
+    }).CreateLogger("GraphToGrid");
 ```
 
-Initialize a new dungeon generator.
+Initialize a layout generator.
 ```
-DungenGenerator generator = new DungenGenerator(props);
+LayoutGenerator generator = new LayoutGenerator(graph, config);
 generator.Initialize(); 
 ```
 
-Attempt to generate a dungeon!
+Generate and retrieve a layout snapped to an integer grid useful for generating Tiled Maps
 ```
-if (generator.TryGenerate())
-    var dungeon = generator.Vend();
-```
+if (generator.TryGenerate()) {
+    var layout = generator.Vend();
 
-### Logging
-
-Pass the generator an ```ILoggerFactory``` via ```DungenGeneratorProps``` before initializing. For example:
-
-```
-DungenGeneratorProps props = new DungenGeneratorProps();
-props.LoggerFactory = LoggerFactory.Create(builder => {
-    builder.AddSimpleConsole(options => {
-        options.SingleLine = true;
-    });
-});
+    layout.SnapToGrid(); 
+}
 ```
 
 ## Contribute
 
-Please open an issue and reference it in a Pull Request. 
+Feel free to open an issue and reference it in a Pull Request. Please ensure there is a corresponding unit test and that the demo project is updated and renders as expected. The demo project is uses the Monogame SDK for rendering.
 
-Ensure there is a corresponding unit test and that the test render it updated and runs (where applicable). Using Monogame SDK to render a test layout.
+### Continuous Deployment
 
-### Package Deployment
-
-A GH workflow will deploy a new nuget package upon PR merge to main. Publish has been set to ignore if the version matches an existing packge. Version can be updated via ```Dungen.csproj```.
+A GitHub workflow will deploy a new nuget package upon Pull Request merge to main. Publish has been set to ignore if the version matches an existing packge. Version can be updated via ```GraphToGrid.csproj```.
